@@ -2,11 +2,12 @@
 
 import streamlit as st
 import time
+# --- IMPORT THE REAL DIAGNOSIS FUNCTION ---
 from model.pest_detector import diagnose_plant_disease
 
 # --- 1. TEXT & LOCALIZATION ---
-# A dictionary to hold all UI text for both languages
 TEXT = {
+    # ... (all your text content remains the same) ...
     "page_title": {"en": "KrishiMitra", "hi": "कृषि मित्र"},
     "page_icon": "🌿",
     "sidebar_title": {"en": "🌿 KrishiMitra", "hi": "🌿 कृषि मित्र"},
@@ -32,7 +33,7 @@ TEXT = {
 # --- 2. BILINGUAL AGENT FUNCTIONS ---
 
 def get_market_price(crop_name, lang='en'):
-    """Returns market price in the selected language."""
+    # ... (this function remains the same) ...
     prices = {
         "soybean": {"en": "The current market price for Soybean in Indore is ₹4,500 per quintal.", "hi": "इंदौर में सोयाबीन का मौजूदा बाजार भाव ₹4,500 प्रति क्विंटल है।"},
         "wheat": {"en": "The current market price for Wheat in Dewas is ₹2,100 per quintal.", "hi": "देवास में गेहूं का मौजूदा बाजार भाव ₹2,100 प्रति क्विंटल है।"}
@@ -47,31 +48,30 @@ def get_market_price(crop_name, lang='en'):
         return fallback[lang]
 
 def get_weather_forecast(location, lang='en'):
-    """Returns weather forecast in the selected language."""
+    # ... (this function remains the same) ...
     responses = {
         "en": f"The weather forecast for {location} is: 28°C, clear skies, with a slight chance of rain in the evening.",
         "hi": f"{location} के लिए मौसम का पूर्वानुमान है: 28°C, आसमान साफ रहेगा, शाम को हल्की बारिश की संभावना है।"
     }
     return responses[lang]
 
-def diagnose_plant_disease(image_data, lang='en'):
-    """Returns plant diagnosis in the selected language."""
-    time.sleep(3) # Simulate model processing time
-    responses = {
-        "en": "Diagnosis complete. The plant appears to have **Late Blight**. Recommended action: Apply a copper-based fungicide immediately.",
-        "hi": "जांच पूरी हुई। पौधे में **पिछेती झुलसा (Late Blight)** रोग लग रहा है। सुझाया गया उपाय: तुरंत तांबे पर आधारित फफूंदनाशक का छिड़काव करें।"
-    }
-    return responses[lang]
+# NOTE: The mocked diagnose_plant_disease function has been removed.
 
 def route_query(query, lang='en'):
     """Router that directs query to the correct agent based on language."""
     query = query.lower()
+    
+    # --- EXPANDED KEYWORDS FOR BETTER DETECTION ---
     keywords = {
         "price": {"en": ["price", "rate", "cost", "mandi"], "hi": ["भाव", "दाम", "कीमत", "मंडी"]},
-        "weather": {"en": ["weather", "forecast"], "hi": ["मौसम"]},
-        "disease": {"en": ["disease", "sick", "pest", "leaf"], "hi": ["बीमारी", "रोग", "पत्ती"]}
+        "weather": {"en": ["weather", "forecast", "temperature"], "hi": ["मौसम", "तापमान"]},
+        "disease": {
+            "en": ["disease", "sick", "pest", "leaf", "plant", "infection", "spots", "ill"],
+            "hi": ["बीमारी", "रोग", "पत्ती", "पौधा", "संक्रमण", "धब्बे", "बीमार"]
+        }
     }
 
+    # --- ROUTING LOGIC (REMAINS THE SAME) ---
     if any(word in query for word in keywords["price"]["en"] + keywords["price"]["hi"]):
         return get_market_price(query, lang)
     elif any(word in query for word in keywords["weather"]["en"] + keywords["weather"]["hi"]):
@@ -88,9 +88,7 @@ st.set_page_config(page_title=TEXT["page_title"]["en"], page_icon=TEXT["page_ico
 
 # --- Language Selection ---
 if 'language' not in st.session_state:
-    st.session_state['language'] = 'en'  # Default to English
-
-# Place language selector at the top
+    st.session_state['language'] = 'en'
 lang_choice = st.radio(
     "Choose Language / भाषा चुनें:",
     ('English', 'हिंदी (Hindi)'),
@@ -115,21 +113,20 @@ st.write(TEXT["app_intro"][lang])
 
 # --- Chat History Management ---
 if "messages" not in st.session_state:
-    # Reset messages if language changes
     st.session_state.messages = [{"role": "assistant", "content": TEXT["welcome_message"][lang]}]
 
-# Display chat messages
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
+    avatar = "🧑‍🌾" if message["role"] == "user" else "🤖"
+    with st.chat_message(message["role"], avatar=avatar):
         st.markdown(message["content"])
 
 # --- User Input & Chat Logic ---
 if prompt := st.chat_input(TEXT["chat_placeholder"][lang]):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
+    with st.chat_message("user", avatar="🧑‍🌾"):
         st.markdown(prompt)
 
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar="🤖"):
         with st.spinner(TEXT["spinner_thinking"][lang]):
             response = route_query(prompt, lang)
             st.markdown(response)
@@ -137,22 +134,26 @@ if prompt := st.chat_input(TEXT["chat_placeholder"][lang]):
     st.session_state.messages.append({"role": "assistant", "content": response})
 
 # --- Conditional File Uploader ---
-if st.session_state.messages[-1]["role"] == "assistant" and TEXT["trigger_upload_check"][lang] in st.session_state.messages[-1]["content"]:
+if st.session_state.messages and st.session_state.messages[-1]["role"] == "assistant" and TEXT["trigger_upload_check"][lang] in st.session_state.messages[-1]["content"]:
     
     uploaded_file = st.file_uploader(TEXT["upload_prompt"][lang], type=["jpg", "png", "jpeg"])
     
     if uploaded_file is not None:
-        with st.chat_message("user"):
+        with open("temp_image.jpg", "wb") as f:
+            f.write(uploaded_file.getbuffer())
+
+        with st.chat_message("user", avatar="🧑‍🌾"):
             st.image(uploaded_file, caption=TEXT["upload_caption"][lang], width=150)
         
         st.session_state.messages.append({"role": "user", "content": "[Image Uploaded]"})
 
-        with st.chat_message("assistant"):
+        with st.chat_message("assistant", avatar="🤖"):
             with st.spinner(TEXT["spinner_analyzing"][lang]):
-                diagnosis = diagnose_plant_disease(uploaded_file, lang)
+                diagnosis = diagnose_plant_disease("temp_image.jpg")
                 st.markdown(diagnosis)
         
         st.session_state.messages.append({"role": "assistant", "content": diagnosis})
-        
         st.session_state.messages[-3]["content"] = TEXT["post_diagnosis_message"][lang]
-        st.experimental_rerun()
+        
+        # --- FIXED RERUN COMMAND ---
+        st.rerun()
