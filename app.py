@@ -1,5 +1,7 @@
 # app.py - KrishiMitra (Bilingual Version)
-
+import requests
+from dotenv import load_dotenv
+import os
 import streamlit as st
 import time
 # --- IMPORT THE REAL DIAGNOSIS FUNCTION ---
@@ -48,12 +50,36 @@ def get_market_price(crop_name, lang='en'):
         return fallback[lang]
 
 def get_weather_forecast(location, lang='en'):
-    # ... (this function remains the same) ...
+    load_dotenv()
+    """Returns weather forecast in the selected language."""
     responses = {
         "en": f"The weather forecast for {location} is: 28°C, clear skies, with a slight chance of rain in the evening.",
         "hi": f"{location} के लिए मौसम का पूर्वानुमान है: 28°C, आसमान साफ रहेगा, शाम को हल्की बारिश की संभावना है।"
     }
-    return responses[lang]
+
+    api_key = os.getenv("WEATHER_API_KEY")
+    if not api_key:
+        return "Error: OpenWeather API key not found. Please set it in the .env file."
+    base_url = "http://api.openweathermap.org/data/2.5/weather?"
+
+    completeUrl = f"{base_url}q={location}&appid={api_key}&units=metric"
+    try:
+        response = requests.get(completeUrl)
+        if response.status_code == 200:
+            data = response.json()
+            print(data)
+            temperature = data['main']['temp']
+            weatherDescription = data['weather'][0]['description']
+            humidity = data['main']['humidity']
+            responses = {
+        "en": f"The weather forecast for {location} is: {temperature}°C, and {weatherDescription} with {humidity}% Humidity",
+        "hi": f"{location} के लिए मौसम का पूर्वानुमान है: {temperature}°C, आसमान साफ रहेगा, शाम को हल्की बारिश की संभावना है।"
+    }
+            return responses[lang]
+        else:
+            return f"response is not valid"
+    except requests.exceptions.RequestException as e:
+        return f"A network error occurred: {e}"
 
 # NOTE: The mocked diagnose_plant_disease function has been removed.
 
