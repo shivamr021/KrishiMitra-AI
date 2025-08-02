@@ -44,7 +44,7 @@ This project addresses the critical need for accessible, real-time agricultural 
 
 1.  **Clone the repository:**
     ```sh
-    git clone [https://github.com/your-username/KrishiMitra-AI.git](https://github.com/your-username/KrishiMitra-AI.git)
+    git clone [https://github.com/shivamr021/KrishiMitra-AI.git](https://github.com/shivamr021/KrishiMitra-AI.git)
     cd KrishiMitra-AI
     ```
 2.  **Create and activate a virtual environment:**
