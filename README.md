@@ -44,7 +44,7 @@ This project addresses the critical need for accessible, real-time agricultural 
 
 1.  **Clone the repository:**
     ```sh
-    git clone [https://github.com/shivamr021/KrishiMitra-AI.git](https://github.com/shivamr021/KrishiMitra-AI.git)
+    git clone https://github.com/shivamr021/KrishiMitra-AI
     cd KrishiMitra-AI
     ```
 2.  **Create and activate a virtual environment:**
@@ -68,6 +68,7 @@ To run the application, execute the following command from the root directory:
 
 ```sh
 streamlit run app.py
+```
 
 The application will open in your default web browser.
 
