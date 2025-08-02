@@ -2,6 +2,7 @@
 
 import streamlit as st
 import time
+from model.pest_detector import diagnose_plant_disease
 
 # --- 1. TEXT & LOCALIZATION ---
 # A dictionary to hold all UI text for both languages
@@ -66,7 +67,7 @@ def route_query(query, lang='en'):
     """Router that directs query to the correct agent based on language."""
     query = query.lower()
     keywords = {
-        "price": {"en": ["price", "rate"], "hi": ["भाव", "दाम"]},
+        "price": {"en": ["price", "rate", "cost", "mandi"], "hi": ["भाव", "दाम", "कीमत", "मंडी"]},
         "weather": {"en": ["weather", "forecast"], "hi": ["मौसम"]},
         "disease": {"en": ["disease", "sick", "pest", "leaf"], "hi": ["बीमारी", "रोग", "पत्ती"]}
     }
