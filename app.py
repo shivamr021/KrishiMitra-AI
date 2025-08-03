@@ -2,7 +2,11 @@
 import requests
 from dotenv import load_dotenv
 import os
+import json
+import re
 import streamlit as st
+import spacy
+from googletrans import Translator
 import time
 # --- IMPORT THE REAL DIAGNOSIS FUNCTION ---
 from model.pest_detector import diagnose_plant_disease
@@ -32,6 +36,12 @@ TEXT = {
     "fallback_message": {"en": "I'm sorry, I can only help with market prices, weather, and plant diseases. Please try asking one of those.", "hi": "माफ़ कीजिए, मैं केवल बाजार भाव, मौसम, और पौधों की बीमारियों में मदद कर सकता हूँ। कृपया इनमें से कोई एक प्रश्न पूछें।"}
 }
 
+# Translation function
+def simple_translate_to_hindi(text_to_translate):
+    translator = Translator()
+    translation = translator.translate(text_to_translate, dest='hi')
+    return translation.text
+
 # --- 2. BILINGUAL AGENT FUNCTIONS ---
 
 def get_market_price(crop_name, lang='en'):
@@ -48,14 +58,31 @@ def get_market_price(crop_name, lang='en'):
         return prices["wheat"][lang]
     else:
         return fallback[lang]
-
+nlp = spacy.load("en_core_web_sm")
+json_file_path = os.path.join(os.path.dirname(__file__), 'static', 'data.json')
+INDIAN_CITIES = []
+try:
+    with open(json_file_path, 'r') as file:
+        data = json.load(file)
+        if isinstance(data, list):
+            # Store a list of lowercase city names for easy matching
+            INDIAN_CITIES = [city.lower() for city in data]
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    st.error(f"Error loading cities file: {e}")
+def extract_location(text):
+    words = re.findall(r'\w+', text.lower())
+    for city in INDIAN_CITIES:
+        for word in words:
+            if word == city:
+                return city
+    doc = nlp(text)
+    for ent in doc.ents:
+        if ent.label_ == "GPE":
+            return ent.text
+    return None
 def get_weather_forecast(location, lang='en'):
     load_dotenv()
     """Returns weather forecast in the selected language."""
-    responses = {
-        "en": f"The weather forecast for {location} is: 28°C, clear skies, with a slight chance of rain in the evening.",
-        "hi": f"{location} के लिए मौसम का पूर्वानुमान है: 28°C, आसमान साफ रहेगा, शाम को हल्की बारिश की संभावना है।"
-    }
 
     api_key = os.getenv("WEATHER_API_KEY")
     if not api_key:
@@ -67,17 +94,36 @@ def get_weather_forecast(location, lang='en'):
         response = requests.get(completeUrl)
         if response.status_code == 200:
             data = response.json()
-            print(data)
             temperature = data['main']['temp']
             weatherDescription = data['weather'][0]['description']
+            hindidescription = simple_translate_to_hindi(weatherDescription)
             humidity = data['main']['humidity']
-            responses = {
-        "en": f"The weather forecast for {location} is: {temperature}°C, and {weatherDescription} with {humidity}% Humidity",
-        "hi": f"{location} के लिए मौसम का पूर्वानुमान है: {temperature}°C, आसमान साफ रहेगा, शाम को हल्की बारिश की संभावना है।"
-    }
-            return responses[lang]
+            if "rain" in weatherDescription:
+                # Use a more natural phrase for rain
+                localized_description_en = "chance of light rain in the evening"
+                localized_description_hi = "शाम को हल्की बारिश की संभावना है।"
+            elif "clear sky" in weatherDescription:
+                localized_description_en = "clear skies"
+                localized_description_hi = "आसमान साफ रहेगा।"
+            elif "clouds" in weatherDescription:
+                localized_description_en = "cloudy skies"
+                localized_description_hi = "आसमान में बादल छाए रहेंगे।"
+            elif "mist" in weatherDescription or "fog" in weatherDescription:
+                localized_description_en = "misty conditions"
+                localized_description_hi = "हल्की धुंध रहेगी।"
+            else:
+                # Fallback to a simple translation if we don't have a specific phrase
+                localized_description_en = weatherDescription
+                localized_description_hi = "मौसम का हाल है: " + hindidescription
+            # --- Build the Final Response Message ---
+            if lang == 'hi':
+                message = f"{location} के लिए मौसम का हाल है: {temperature}°C, {localized_description_hi} और {humidity}% आर्द्रता।"
+            else:
+                message = f"The weather forecast for {location} is: {temperature}°C, with {localized_description_en} and {humidity}% humidity."
+
+            return message
         else:
-            return f"response is not valid"
+            return {"en": f"Error: Could not retrieve weather data for {location}.", "hi": f"त्रुटि: {location} के लिए मौसम डेटा प्राप्त नहीं किया जा सका।"}[lang]
     except requests.exceptions.RequestException as e:
         return f"A network error occurred: {e}"
 
@@ -86,7 +132,8 @@ def get_weather_forecast(location, lang='en'):
 def route_query(query, lang='en'):
     """Router that directs query to the correct agent based on language."""
     query = query.lower()
-    
+    location = extract_location(query)
+    # print(location)
     # --- EXPANDED KEYWORDS FOR BETTER DETECTION ---
     keywords = {
         "price": {"en": ["price", "rate", "cost", "mandi"], "hi": ["भाव", "दाम", "कीमत", "मंडी"]},
@@ -101,7 +148,7 @@ def route_query(query, lang='en'):
     if any(word in query for word in keywords["price"]["en"] + keywords["price"]["hi"]):
         return get_market_price(query, lang)
     elif any(word in query for word in keywords["weather"]["en"] + keywords["weather"]["hi"]):
-        return get_weather_forecast("Indore", lang)
+        return get_weather_forecast(location, lang)
     elif any(word in query for word in keywords["disease"]["en"] + keywords["disease"]["hi"]):
         return TEXT["trigger_disease"][lang]
     else:
@@ -137,30 +184,48 @@ with st.sidebar:
 st.title(TEXT["app_title"][lang])
 st.write(TEXT["app_intro"][lang])
 
-# --- Chat History Management ---
-if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "assistant", "content": TEXT["welcome_message"][lang]}]
+# --- NEW: Initialize Dual Chat History ---
+if "messages_en" not in st.session_state:
+    st.session_state.messages_en = [{"role": "assistant", "content": TEXT["welcome_message"]["en"]}]
+    st.session_state.messages_hi = [{"role": "assistant", "content": TEXT["welcome_message"]["hi"]}]
 
-for message in st.session_state.messages:
+# --- Display the Correct Chat History ---
+display_messages = st.session_state.messages_hi if lang == 'hi' else st.session_state.messages_en
+for message in display_messages:
     avatar = "🧑‍🌾" if message["role"] == "user" else "🤖"
     with st.chat_message(message["role"], avatar=avatar):
         st.markdown(message["content"])
 
-# --- User Input & Chat Logic ---
+# --- User Input & Agent Logic ---
 if prompt := st.chat_input(TEXT["chat_placeholder"][lang]):
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    # A. Append the user prompt to both histories with immediate translation
+    prompt_hi = simple_translate_to_hindi(prompt) if lang == 'en' else prompt
+    prompt_en = prompt if lang == 'en' else simple_translate_to_hindi(prompt)
+    st.session_state.messages_en.append({"role": "user", "content": prompt_en})
+    st.session_state.messages_hi.append({"role": "user", "content": prompt_hi})
+
+    # B. Display the user message
     with st.chat_message("user", avatar="🧑‍🌾"):
         st.markdown(prompt)
 
+    # C. Get the assistant's response
     with st.chat_message("assistant", avatar="🤖"):
         with st.spinner(TEXT["spinner_thinking"][lang]):
-            response = route_query(prompt, lang)
-            st.markdown(response)
+            response_text = route_query(prompt, lang)
+            st.markdown(response_text)
     
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    # D. Append the assistant's response to both histories
+    response_en = response_text if lang == 'en' else simple_translate_to_hindi(response_text)
+    response_hi = response_text if lang == 'hi' else simple_translate_to_hindi(response_text)
+    st.session_state.messages_en.append({"role": "assistant", "content": response_en})
+    st.session_state.messages_hi.append({"role": "assistant", "content": response_hi})
+    st.rerun()
 
 # --- Conditional File Uploader ---
-if st.session_state.messages and st.session_state.messages[-1]["role"] == "assistant" and TEXT["trigger_upload_check"][lang] in st.session_state.messages[-1]["content"]:
+# --- Conditional File Uploader ---
+# Get the last message from the correct history list
+last_message_list = st.session_state.messages_hi if lang == 'hi' else st.session_state.messages_en
+if last_message_list and last_message_list[-1]["role"] == "assistant" and TEXT["trigger_upload_check"][lang] in last_message_list[-1]["content"]:
     
     uploaded_file = st.file_uploader(TEXT["upload_prompt"][lang], type=["jpg", "png", "jpeg"])
     
@@ -171,15 +236,33 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "assis
         with st.chat_message("user", avatar="🧑‍🌾"):
             st.image(uploaded_file, caption=TEXT["upload_caption"][lang], width=150)
         
-        st.session_state.messages.append({"role": "user", "content": "[Image Uploaded]"})
+        # Append the image uploaded message to both histories
+        image_uploaded_en = "[Image Uploaded]"
+        image_uploaded_hi = "[तस्वीर अपलोड की गई]"
+        st.session_state.messages_en.append({"role": "user", "content": image_uploaded_en})
+        st.session_state.messages_hi.append({"role": "user", "content": image_uploaded_hi})
 
         with st.chat_message("assistant", avatar="🤖"):
             with st.spinner(TEXT["spinner_analyzing"][lang]):
-                diagnosis = diagnose_plant_disease("temp_image.jpg")
-                st.markdown(diagnosis)
+                # Get the diagnosis in English from your model
+                diagnosis_en = diagnose_plant_disease("temp_image.jpg")
+                # Translate it to Hindi
+                diagnosis_hi = simple_translate_to_hindi(diagnosis_en)
+
+                if lang == 'hi':
+                    st.markdown(diagnosis_hi)
+                else:
+                    st.markdown(diagnosis_en)
         
-        st.session_state.messages.append({"role": "assistant", "content": diagnosis})
-        st.session_state.messages[-3]["content"] = TEXT["post_diagnosis_message"][lang]
+        # Append the diagnosis to both histories
+        st.session_state.messages_en.append({"role": "assistant", "content": diagnosis_en})
+        st.session_state.messages_hi.append({"role": "assistant", "content": diagnosis_hi})
         
-        # --- FIXED RERUN COMMAND ---
+        # We also need to add the post-diagnosis message
+        post_diag_en = TEXT["post_diagnosis_message"]["en"]
+        post_diag_hi = TEXT["post_diagnosis_message"]["hi"]
+        st.session_state.messages_en.append({"role": "assistant", "content": post_diag_en})
+        st.session_state.messages_hi.append({"role": "assistant", "content": post_diag_hi})
+
+        # --- IMPORTANT: Rerun the app to update the chat history ---
         st.rerun()
