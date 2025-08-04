@@ -81,10 +81,11 @@ This project was built as part of the IBM SkillsBuild AI-ML Internship by **Team
 | **Shivam Rathod** | Team Lead / Integrator | [GitHub](https://github.com/shivamr021)    | [LinkedIn](https://www.linkedin.com/in/shivamrathod021/)    |
 | **Shatakshi Tiwari**| Co-Lead / CV Lead    | [GitHub](https://github.com/Shatakshi0216) | [LinkedIn](https://www.linkedin.com/in/shatakshitiwari017/)  |
 | **Sahil Kukreja** | Co-Lead / Agent Lead   | [GitHub](https://github.com/Sahilkukreja30) | [LinkedIn](https://www.linkedin.com/in/sahil-kukreja-943993289/)  |
-| **Sumedha** | Frontend / Jr. Dev     | [GitHub](https://github.com/sumedhamandloi)    | [LinkedIn](https://www.linkedin.com/in/sumedha-mandloi-5a1250318/)  |
-| **Rachit** | Frontend / Jr. Dev     | [GitHub](https://github.com/Rachitneema03)     | [LinkedIn](https://www.linkedin.com/in/rachit-neema/)  |
-| **Nitika** | Documentation / Jr. Dev| [GitHub](https://github.com/nitikajain25)     | [LinkedIn](https://www.linkedin.com/in/nitika-jain-b8690b353/)  |
-| **Pratishta** | Documentation / Jr. Dev| [their-github-id](https://github.com/their-id)  | [their-linkedin-id](https://linkedin.com/in/their-id)  |
+| **Parth Soni** | Co-Lead / Documentation   | [GitHub](https://github.com/parthsoni05) | [LinkedIn](https://www.linkedin.com/in/parth-soni-1a85b128b/)  |
+| **Sumedha Mandloi** | Frontend / Jr. Dev     | [GitHub](https://github.com/sumedhamandloi)    | [LinkedIn](https://www.linkedin.com/in/sumedha-mandloi-5a1250318/)  |
+| **Rachit Neema** | Frontend / Jr. Dev     | [GitHub](https://github.com/Rachitneema03)     | [LinkedIn](https://www.linkedin.com/in/rachit-neema/)  |
+| **Nitika Jain** | Documentation / Jr. Dev| [GitHub](https://github.com/nitikajain25)     | [LinkedIn](https://www.linkedin.com/in/nitika-jain-b8690b353/)  |
+| **Prashansa Hirve** | Documentation / Jr. Dev| [GitHub](https://github.com/PrashansaHirve)  | [Linkedin](https://www.linkedin.com/in/prashansa-hirve-01ba85333/)  |
 
 ## 🙏 Acknowledgments
 
