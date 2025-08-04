@@ -81,9 +81,9 @@ This project was built as part of the IBM SkillsBuild AI-ML Internship by **Team
 | **Shivam Rathod** | Team Lead / Integrator | [GitHub](https://github.com/shivamr021)    | [LinkedIn](https://www.linkedin.com/in/shivamrathod021/)    |
 | **Shatakshi Tiwari**| Co-Lead / CV Lead    | [GitHub](https://github.com/Shatakshi0216) | [LinkedIn](https://www.linkedin.com/in/shatakshitiwari017/)  |
 | **Sahil Kukreja** | Co-Lead / Agent Lead   | [GitHub](https://github.com/Sahilkukreja30) | [LinkedIn](https://www.linkedin.com/in/sahil-kukreja-943993289/)  |
-| **Sumedha** | Frontend / Jr. Dev     | [their-github-id](https://github.com/sumedhamandloi)    | [their-linkedin-id](https://www.linkedin.com/in/sumedha-mandloi-5a1250318/)  |
-| **Rachit** | Frontend / Jr. Dev     | [their-github-id](https://github.com/Rachitneema03)     | [their-linkedin-id](www.linkedin.com/in/rachit-neema)  |
-| **Nitika** | Documentation / Jr. Dev| [their-github-id](https://github.com/nitikajain25)     | [their-linkedin-id](https://www.linkedin.com/in/nitika-jain-b8690b353/)  |
+| **Sumedha** | Frontend / Jr. Dev     | [GitHub](https://github.com/sumedhamandloi)    | [LinkedIn](https://www.linkedin.com/in/sumedha-mandloi-5a1250318/)  |
+| **Rachit** | Frontend / Jr. Dev     | [GitHub](https://github.com/Rachitneema03)     | [LinkedIn](https://www.linkedin.com/in/rachit-neema/)  |
+| **Nitika** | Documentation / Jr. Dev| [GitHub](https://github.com/nitikajain25)     | [LinkedIn](https://www.linkedin.com/in/nitika-jain-b8690b353/)  |
 | **Pratishta** | Documentation / Jr. Dev| [their-github-id](https://github.com/their-id)  | [their-linkedin-id](https://linkedin.com/in/their-id)  |
 
 ## 🙏 Acknowledgments
