@@ -341,6 +341,43 @@ Agricultural Advisory:
         return f"A network error occurred: {e}"
 
 # NOTE: The mocked diagnose_plant_disease function has been removed.
+def plant_diagnosis_agent(lang='en'):
+    """
+    Display uploader if needed and return diagnosis string in the chosen language.
+    This should be called *after* the user is prompted for an image.
+    """
+    if "last_bot_message" not in st.session_state:
+        return None
+
+    if TEXT["upload_prompt"][lang] in st.session_state.last_bot_message:
+        uploaded_file = st.file_uploader(TEXT["upload_prompt"][lang], type=["jpg", "jpeg", "png"])
+
+        if uploaded_file is not None:
+            with open("temp_image.jpg", "wb") as f:
+                f.write(uploaded_file.getbuffer())
+
+            with st.chat_message("user", avatar="🧑‍🌾"):
+                st.image(uploaded_file, caption=TEXT["upload_caption"][lang], width=150)
+
+            with st.chat_message("assistant", avatar="🤖"):
+                with st.spinner(TEXT["spinner_analyzing"][lang]):
+                    diagnosis_en = diagnose_plant_disease("temp_image.jpg")
+                    diagnosis_hi = simple_translate_to_hindi(diagnosis_en)
+
+                    diagnosis_final = diagnosis_hi if lang == 'hi' else diagnosis_en
+                    st.markdown(diagnosis_final)
+
+            # Append to chat history if used in chat interface
+            st.session_state.messages_en.append({"role": "assistant", "content": diagnosis_en})
+            st.session_state.messages_hi.append({"role": "assistant", "content": diagnosis_hi})
+
+            st.session_state.messages_en.append({"role": "assistant", "content": TEXT["post_diagnosis_message"]["en"]})
+            st.session_state.messages_hi.append({"role": "assistant", "content": TEXT["post_diagnosis_message"]["hi"]})
+
+            return diagnosis_final
+
+    return None
+
 
 def route_query(query, lang='en'):
     """Router that directs query to the correct agent based on language."""
@@ -461,7 +498,7 @@ titles = {
 }
 header_cols = st.columns([1, 4, 2])
 with header_cols[0]:
-    st.image("logo op 1.png", width=110)
+    st.image("static/logo.png", width=110)
 with header_cols[1]:
     st.markdown(f"<h2 style='margin: 0; padding-top: 18px; font-size:50px;'>{titles.get(st.session_state.language, 'KrishiMitra')}</h2>", unsafe_allow_html=True)
 with header_cols[2]:
@@ -549,12 +586,47 @@ for message in messages_to_display:
     with st.chat_message(message["role"], avatar="🧑‍🌾" if message["role"] == "user" else "🤖"):
         st.markdown(message["content"])
 
-# File upload logic (always visible if triggered)
-last_message = messages_to_display[-1] if messages_to_display else {}
-if last_message.get("role") == "assistant" and TEXT["trigger_upload_check"][lang] in last_message.get("content", "").lower():
-    uploaded_file = st.file_uploader(TEXT["upload_prompt"][lang], type=["jpg", "png", "jpeg"])
+# --- FINAL, WORKING FILE UPLOADER LOGIC ---
+# Get the last message from the correct history list
+last_message_list = st.session_state.messages_hi if lang == 'hi' else st.session_state.messages_en
+
+# Check if the last message from the assistant is the one prompting for an image upload
+if last_message_list and last_message_list[-1]["role"] == "assistant" and TEXT["trigger_disease"][lang] in last_message_list[-1]["content"]:
+    
+    uploaded_file = st.file_uploader(TEXT["upload_prompt"][lang], type=["jpg", "png", "jpeg"], key="file_uploader")
+    
     if uploaded_file is not None:
-        st.success("Image uploaded! Analysis would proceed here.")
+        # Save the file temporarily to pass its path to the model
+        with open("temp_image.jpg", "wb") as f:
+            f.write(uploaded_file.getbuffer())
+
+        # --- Display the user's uploaded image in the chat ---
+        with st.chat_message("user", avatar="🧑‍🌾"):
+            st.image(uploaded_file, caption=TEXT["upload_caption"][lang], width=150)
+
+        # Append a placeholder to the history
+        st.session_state.messages_en.append({"role": "user", "content": "[Image Uploaded]"})
+        st.session_state.messages_hi.append({"role": "user", "content": "[तस्वीर अपलोड की गई]"})
+        
+        # --- Call the AI model and display the diagnosis ---
+        with st.chat_message("assistant", avatar="🤖"):
+            with st.spinner(TEXT["spinner_analyzing"][lang]):
+                # Call the REAL diagnosis function from pest_detector.py
+                diagnosis_en = diagnose_plant_disease("temp_image.jpg")
+                # Translate the response for the other history
+                diagnosis_hi = simple_translate_to_hindi(diagnosis_en)
+
+                # Display the correct language
+                final_diagnosis = diagnosis_hi if lang == 'hi' else diagnosis_en
+                st.markdown(final_diagnosis)
+        
+        # Add the diagnosis to both histories
+        st.session_state.messages_en.append({"role": "assistant", "content": diagnosis_en})
+        st.session_state.messages_hi.append({"role": "assistant", "content": diagnosis_hi})
+
+        # Set a flag to clear the uploader and prevent re-submission
+        st.session_state.view_mode = 'chat_only' 
+        st.rerun()
 
 # --- 9. CHAT INPUT BAR (always visible) ---
 # Handle card clicks and set initial prompt
