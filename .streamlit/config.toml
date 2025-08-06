@@ -1,0 +1,17 @@
+# .streamlit/config.toml
+
+[theme]
+# The base theme is "light"
+base="light"
+
+# The beige background for the main app area
+backgroundColor="#FAF8F1"
+
+# The color for the sidebar (not used in your app, but good to set)
+secondaryBackgroundColor="#FFFFFF"
+
+# The main text color
+textColor="#2F4F4F"
+
+# You can also specify a font here, but we will use CSS for more control
+# font="sans serif"
