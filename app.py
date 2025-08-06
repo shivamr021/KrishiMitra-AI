@@ -64,9 +64,16 @@ lang = st.session_state.language
 
 # Translation function
 def simple_translate_to_hindi(text_to_translate):
-    translator = Translator()
-    translation = translator.translate(text_to_translate, dest='hi')
-    return translation.text
+    """Translates text to Hindi, handling a known bug in the googletrans library."""
+    try:
+        translator = Translator()
+        # The key fix is adding raise_exception=True
+        translation = translator.translate(text_to_translate, dest='hi', raise_exception=True)
+        return translation.text
+    except Exception as e:
+        print(f"Translation Error: {e}")
+        # Fallback to returning the original text if translation fails
+        return text_to_translate
 
 # --- 2. BILINGUAL AGENT FUNCTIONS ---
 
