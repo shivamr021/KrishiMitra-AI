@@ -14,7 +14,6 @@ def handle_query_with_ai(user_query: str) -> dict:
     if not model:
         return {"final_response": "AI model is not available. Please check the server configuration."}
 
-    # MODIFIED META PROMPT
     meta_prompt = f"""
     You are KrishiMitra, a friendly and helpful AI assistant for farmers.
     Your primary goal is to understand a farmer's query in their native language and provide an appropriate action or response.
@@ -44,13 +43,11 @@ def handle_query_with_ai(user_query: str) -> dict:
     Respond with ONLY the JSON object. Do not add any extra text or formatting.
     """
     try:
-        # Safety settings can remain the same
         safety_settings = [
             {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
             {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
         ]
         response = model.generate_content(meta_prompt, safety_settings=safety_settings)
-        # Your JSON parsing logic is good, keep it
         json_string = response.text.strip().replace("```json", "").replace("```", "")
         return json.loads(json_string)
     except Exception as e:
