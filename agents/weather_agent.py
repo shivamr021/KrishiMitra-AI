@@ -1,4 +1,3 @@
-# agents/weather_agent.py
 import requests
 import time
 from core.config import settings
@@ -28,7 +27,6 @@ def get_weather_forecast(location: str) -> str:
         elif temp > 35:
             advisory = "High temperatures expected. Ensure adequate irrigation for crops."
 
-        # --- REVISED FORMATTED REPORT ---
         report = (f"🌤️ *Weather in {location.capitalize()}*\n\n"
                   f"*- Condition:* {weather_desc.capitalize()}\n"
                   f"*- Temp:* *{temp}°C* (Feels like: {feels_like}°C)\n"
