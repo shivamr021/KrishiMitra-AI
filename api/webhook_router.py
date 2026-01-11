@@ -2,7 +2,7 @@ import json
 import traceback
 from fastapi import APIRouter, Form, Response
 from twilio.twiml.messaging_response import MessagingResponse
-from typing import Annotated
+from typing import Annotated, Optional
 from core import router as tools
 from agents.pest_detection_agent import diagnose_from_url
 from utils.ai_processor import handle_query_with_ai, translate_final_text
@@ -13,10 +13,11 @@ user_sessions = {}
 @router.post("/chat")
 async def chat_webhook(
     From: Annotated[str, Form()],
-    Body: Annotated[str, Form()],
+    Body: Annotated[Optional[str], Form()] = None,
     NumMedia: Annotated[int, Form()] = 0,
-    MediaUrl0: Annotated[str | None, Form()] = None
+    MediaUrl0: Annotated[Optional[str], Form()] = None
 ):
+
     response_twiml = MessagingResponse()
     final_reply = ""
     user_id = From
@@ -66,4 +67,3 @@ async def chat_webhook(
     final_response_str = str(response_twiml)
     print(f"--- Sending TwiML Response: {final_response_str} ---")
     return Response(content=final_response_str, media_type="application/xml")
-
