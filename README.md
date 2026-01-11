@@ -154,25 +154,17 @@ uvicorn main:app --reload
 
 ---
 
-## 👨‍💻 Author & Team
+## 👥 Team KrishiKrew
 
-**Project Lead & Primary Developer**
+**KrishiMitra AI** is a collaborative project developed by a **team of four**, combining expertise in AI engineering, backend integration, frontend development, and research-driven presentation design.
 
-**Shivam Rathod** — AI Engineer | Data Scientist | ML Developer
+### 🌱 Team Members & Contributions
 
-🌐 [Portfolio](https://portfolioshivamrathod.vercel.app/)
-💼 [LinkedIn](https://www.linkedin.com/in/shivamrathod021)
-🐙 [GitHub](https://github.com/shivamr021)
-✉️ [Email](mailto:shivamrathod011@gmail.com)
-
----
-
-### 🤝 Team KrishiKrew
-
-| Name                 | Role / Contribution                                        | LinkedIn      | GitHub      |
-| -------------------- | ---------------------------------------------------------- | ------------- | ----------- |
-| **Shatakshi Tiwari** | Research, Ideation & Presentation Design (PPT Development) | [LinkedIn](https://www.linkedin.com/in/shatakshitiwari017/) | [GitHub](https://github.com/Shatakshi0216) |
-| **Nitika Jain**           | Research & Visual Design Support (PPT & Documentation)     | [LinkedIn](https://www.linkedin.com/in/nitika-jain-b8690b353/) | [GitHub](https://github.com/nitikajain25) |
-| **Sahil Kukreja**    | Frontend Developer & System Design Support                 | [LinkedIn](https://www.linkedin.com/in/sahil-kukreja-943993289/) | [GitHub](https://github.com/Sahilkukreja30) |
+| Name | Role & Responsibility | LinkedIn | GitHub |
+|------|----------------------|----------|--------|
+| **Shivam Rathod** | **Backend & AI Integration Engineer** | [LinkedIn](https://www.linkedin.com/in/shivamrathod021) | [GitHub](https://github.com/shivamr021) |
+| **Shatakshi Tiwari** | **AI/ML Engineer** | [LinkedIn](https://www.linkedin.com/in/shatakshitiwari017/) | [GitHub](https://github.com/Shatakshi0216) |
+| **Sahil Kukreja** | **Frontend Developer & System Design Support** | [LinkedIn](https://www.linkedin.com/in/sahil-kukreja-943993289/) | [GitHub](https://github.com/Sahilkukreja30) |
+| **Nitika Jain** | **Backend & Research** | [LinkedIn](https://www.linkedin.com/in/nitika-jain-b8690b353/) | [GitHub](https://github.com/nitikajain25) |
 
 > 💡 *This project is submitted to the **OpenAI × NxtWave Buildathon** under team name **KrishiKrew**, featuring collaborative contributions across research, design, and AI integration.*
