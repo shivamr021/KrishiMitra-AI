@@ -1,5 +1,3 @@
-# agents/pest_detection_agent.py (Optimized Drop-in Replacement)
-
 import requests
 import numpy as np
 import json
@@ -14,7 +12,6 @@ from keras.layers import Input, GlobalAveragePooling2D, Dense, Dropout
 import google.generativeai as genai
 from PIL import Image
 
-# --- Model architecture definition (no changes needed) ---
 def create_model_architecture(num_classes):
     inputs = Input(shape=(224, 224, 3))
     base_model = EfficientNetB0(weights=None, include_top=False, input_tensor=inputs)
@@ -26,7 +23,6 @@ def create_model_architecture(num_classes):
     model = Model(inputs=inputs, outputs=outputs)
     return model
 
-# --- Model and Class Name Loading ---
 try:
     with open(settings.CLASS_NAMES_PATH, 'r') as f:
         CLASS_NAMES = json.load(f)
@@ -37,8 +33,6 @@ except Exception as e:
     model = None
     CLASS_NAMES = []
 
-# --- 1. Comprehensive Set of Healthy Classes ---
-# This set explicitly defines all class names that represent a healthy plant.
 HEALTHY_CLASSES = {
     "Apple leaf",
     "Bell_pepper leaf",
@@ -52,26 +46,17 @@ HEALTHY_CLASSES = {
     "grape leaf"
 }
 
-# --- 2. Comprehensive Remedy Knowledge Base ---
-# This dictionary contains remedies for all known diseases in the dataset.
 REMEDY_KNOWLEDGE_BASE = {
-    # Apple
     "Apple Scab Leaf": "Apply a fungicide containing captan or mancozeb. Prune infected areas and remove fallen leaves to reduce fungal spread.",
     "Apple rust leaf": "Use fungicides like myclobutanil or triadimefon. Remove nearby cedar trees if possible, as they are alternate hosts for the rust fungus.",
-    # Bell Pepper
     "Bell_pepper leaf spot": "Apply copper-based bactericides preventatively. Ensure good air circulation and avoid overhead watering.",
-    # Corn
     "Corn Gray leaf spot": "Use resistant corn hybrids and practice crop rotation with non-host crops. Fungicides like pyraclostrobin can be effective.",
     "Corn leaf blight": "Practice crop rotation and tillage to bury crop residue. Apply fungicides if the disease appears early on susceptible hybrids.",
     "Corn rust leaf": "Plant resistant hybrids. Foliar fungicides can be applied when rust pustules first appear.",
-    # Potato
     "Potato leaf early blight": "Apply a fungicide containing mancozeb or chlorothalonil. Maintain plant health with proper nutrition and irrigation.",
     "Potato leaf late blight": "Extremely destructive. Immediately remove and destroy affected plants. Apply a copper-based or systemic fungicide preventatively.",
-    # Squash
     "Squash Powdery mildew leaf": "Apply horticultural oils, neem oil, or fungicides containing sulfur or potassium bicarbonate. Improve air circulation around plants.",
-    # Grape
     "grape leaf black rot": "Prune out and destroy infected parts (leaves, fruit). Apply fungicides like mancozeb or captan starting from early spring.",
-    # Tomato Diseases
     "Tomato Early blight leaf": "Apply fungicides containing chlorothalonil or mancozeb. Mulch around plants and use stakes to keep them off the ground.",
     "Tomato Septoria leaf spot": "Remove infected lower leaves. Apply fungicides like chlorothalonil. Avoid overhead watering.",
     "Tomato leaf bacterial spot": "Apply copper-based sprays. Difficult to control once established. Remove infected plants to prevent spread.",
@@ -83,7 +68,6 @@ REMEDY_KNOWLEDGE_BASE = {
 DEFAULT_REMEDY = "Consult a local agricultural expert for specific treatment options."
 IMG_SIZE = 224
 
-# --- Gemini Vision AI Fallback Configuration ---
 try:
     genai.configure(api_key=settings.GEMINI_API_KEY)
     vision_model = genai.GenerativeModel('gemini-pro-vision')
@@ -110,12 +94,10 @@ def diagnose_with_vision_ai(image_path: str) -> str:
         print(f"Gemini Vision Error: {e}")
         return "The advanced AI analysis failed. Please ensure the image is clear."
 
-# --- Main Diagnosis Function with Optimized Logic ---
 def diagnose_from_url(image_url: str) -> str:
     if not model:
         return "Error: The primary diagnosis model is not loaded. Please check server logs."
     
-    # --- Image download logic (no changes) ---
     try:
         response = requests.get(
             image_url,
@@ -150,7 +132,6 @@ def diagnose_from_url(image_url: str) -> str:
             os.remove(image_path)
 
             if is_healthy:
-                # --- FORMATTED HEALTHY RESPONSE ---
                 return (
                     f"✅ *Diagnosis:* Healthy\n\n"
                     f"Looks like a healthy {diagnosis}.\n\n"
@@ -158,7 +139,6 @@ def diagnose_from_url(image_url: str) -> str:
                     f"_(Model Confidence: {confidence:.1%})_"
                 )
             else:
-                # --- FORMATTED DISEASED RESPONSE ---
                 remedy = REMEDY_KNOWLEDGE_BASE.get(class_name, DEFAULT_REMEDY)
                 return (
                     f"🩺 *Diagnosis:* {diagnosis}\n\n"
@@ -170,7 +150,6 @@ def diagnose_from_url(image_url: str) -> str:
             print(f"--- Low Confidence ({confidence:.1%}). Falling back to Gemini Vision AI. ---")
             vision_result = diagnose_with_vision_ai(image_path)
             os.remove(image_path)
-            # The vision model is already prompted to provide a formatted response, so no change is needed here.
             return vision_result
 
     except Exception as e:
