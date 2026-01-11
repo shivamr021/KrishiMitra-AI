@@ -1,8 +1,6 @@
-# agents/market_price_agent.py
 import google.generativeai as genai
 from core.config import settings
 
-# Configure the model at the agent level for this specific task
 try:
     genai.configure(api_key=settings.GEMINI_API_KEY)
     model = genai.GenerativeModel('gemini-flash-latest')
@@ -21,9 +19,8 @@ def get_market_price(commodity: str, location: str = 'Khargone') -> str:
     if not commodity:
         return "Please specify which crop you'd like the price for."
 
-    # --- REVISED PROMPT TO REQUEST FORMATTING ---
     prompt = (
-        f"What is the most recent modal price for '{commodity}' in the '{location}' district of Madhya Pradesh, India? "
+        f"What is the most recent modal price for '{commodity}' in the '{location}', India? "
         f"Answer concisely. The final output MUST be formatted for WhatsApp using asterisks for bolding and newlines. "
         f"For example: "
         f"🌾 *Latest Price for {commodity.capitalize()}*\n\n"
@@ -36,7 +33,6 @@ def get_market_price(commodity: str, location: str = 'Khargone') -> str:
         if response.text and len(response.text) > 10:
              return response.text.strip()
         else:
-             # Formatted fallback response
              return f"⚠️ Sorry, I couldn't find a specific price for *{commodity}* in *{location}* right now."
 
     except Exception as e:
