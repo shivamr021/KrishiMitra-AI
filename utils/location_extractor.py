@@ -1,10 +1,8 @@
-# utils/location_extractor.py
 import json
 import re
 import spacy
 from core.config import settings
 
-# Load spaCy model and city data once on startup
 nlp = spacy.load("en_core_web_sm")
 INDIAN_CITIES = []
 try:
@@ -24,7 +22,7 @@ def extract_location(text: str) -> str | None:
     
     doc = nlp(text)
     for ent in doc.ents:
-        if ent.label_ == "GPE": # GPE = Geopolitical Entity
+        if ent.label_ == "GPE":
             return ent.text
             
     return None
