@@ -134,21 +134,25 @@ evaluation/eval.py
 
 # 🖼 Screenshots
 
-## Frontend Demo
+<div align="center">
 
-![Frontend Demo](assets/frontend_demo.png)
+### Frontend Demo
 
----
+<img src="assets/frontend_demo.png" width="700"/>
 
-## WhatsApp Workflow
+<br><br>
 
-![WhatsApp Demo](assets/whatsapp_demo.png)
+### WhatsApp Workflow
 
----
+<img src="assets/whatsapp_demo.png" width="320"/>
 
-## Hindi Interaction Demo
+<br><br>
 
-![Hindi Demo](assets/whatsapp_hindi_demo.png)
+### Hindi Interaction Demo
+
+<img src="assets/whatsapp_hindi_demo.png" width="320"/>
+
+</div>
 
 ---
 
@@ -218,16 +222,46 @@ assets/
 # 👥 Team
 
 ## Shivam Rathod
-Backend Development, AI Integration, TensorFlow Model Training, Twilio Workflow Automation
+Backend Development, AI Integration, TensorFlow Model Training, FastAPI Development, Twilio Workflow Automation
 
-## Sahil Kukreja
-Frontend Development
+- LinkedIn:
+  https://www.linkedin.com/in/shivamrathod021
+
+- GitHub:
+  https://github.com/shivamr021
+
+---
 
 ## Shatakshi Tiwari
-Presentation & Research Support
+Backend Support, AI/ML Integration Support, Project Ideation, Research & Presentation Design
+
+- LinkedIn:
+  https://www.linkedin.com/in/shatakshitiwari017/
+
+- GitHub:
+  https://github.com/Shatakshi0216
+
+---
+
+## Sahil Kukreja
+Frontend Development, UI Integration, Weather API Configuration Support
+
+- LinkedIn:
+  https://www.linkedin.com/in/sahil-kukreja-943993289/
+
+- GitHub:
+  https://github.com/Sahilkukreja30
+
+---
 
 ## Nitika Jain
-Documentation & Research Support
+Documentation, Presentation Support, and Research Assistance
+
+- LinkedIn:
+  https://www.linkedin.com/in/nitika-jain-b8690b353/
+
+- GitHub:
+  https://github.com/nitikajain25
 
 ---
 
