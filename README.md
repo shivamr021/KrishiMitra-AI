@@ -134,25 +134,26 @@ evaluation/eval.py
 
 # 🖼 Screenshots
 
-<div align="center">
+<table align="center">
+<tr>
 
-### Frontend Demo
+<td align="center">
+<b>Frontend Demo</b><br><br>
+<img src="assets/frontend_demo.png" width="320"/>
+</td>
 
-<img src="assets/frontend_demo.png" width="700"/>
+<td align="center">
+<b>WhatsApp Workflow</b><br><br>
+<img src="assets/whatsapp_demo.png" width="220"/>
+</td>
 
-<br><br>
+<td align="center">
+<b>Hindi Interaction</b><br><br>
+<img src="assets/whatsapp_hindi_demo.png" width="220"/>
+</td>
 
-### WhatsApp Workflow
-
-<img src="assets/whatsapp_demo.png" width="320"/>
-
-<br><br>
-
-### Hindi Interaction Demo
-
-<img src="assets/whatsapp_hindi_demo.png" width="320"/>
-
-</div>
+</tr>
+</table>
 
 ---
 
