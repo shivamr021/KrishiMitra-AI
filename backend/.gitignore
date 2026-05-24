@@ -1,0 +1,16 @@
+# Python
+
+pycache/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Environment
+
+.env
+
+# Temporary files
+
+temp/
+*.tmp
