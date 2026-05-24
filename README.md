@@ -11,6 +11,14 @@ It acts as a **knowledgeable companion**, helping with crop protection, financia
 
 ---
 
+## 🔗 Live Demo & Deployment
+
+- 🌐 Frontend: https://krishi-mitra-dev-ai.vercel.app/
+- 🤗 Hugging Face Space (Backend Deployment): https://shivamr021-krishimitra-ai.hf.space/
+- 🎥 Demo Video: https://youtube.com/shorts/ygmrwU6daT0?feature=share
+
+---
+
 ## ✨ Core Features
 
 This isn't just a chatbot — it's a **suite of powerful AI tools** tailored for the modern farmer.
