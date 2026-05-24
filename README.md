@@ -1,148 +1,191 @@
-# 🌾 KrishiMitra AI WhatsApp Chatbot 🤖
+# 🌾 KrishiMitra AI
 
-### *Your AI-powered "Farmer's Friend" for hyperlocal agricultural intelligence, delivered directly through WhatsApp.*
+### Multilingual AI-powered agricultural intelligence system delivered through WhatsApp
 
----
+KrishiMitra is an AI-assisted agricultural intelligence platform designed to help farmers with:
 
-## 🧠 Overview
+- crop disease diagnosis
+- mandi price assistance
+- weather intelligence
+- multilingual conversational support
 
-**KrishiMitra** is a sophisticated, multilingual AI chatbot designed to empower farmers in India by providing **instant, actionable agricultural intelligence**.
-It acts as a **knowledgeable companion**, helping with crop protection, financial decisions, and daily planning — all through a **simple WhatsApp interface**.
-
----
-
-## 🔗 Live Demo & Deployment
-
-- 🌐 Frontend: https://krishi-mitra-dev-ai.vercel.app/
-- 🤗 Hugging Face Space (Backend Deployment): https://shivamr021-krishimitra-ai.hf.space/
-- 🎥 Demo Video: https://youtube.com/shorts/ygmrwU6daT0?feature=share
+through a WhatsApp-based workflow powered by FastAPI, TensorFlow, Gemini Vision, and Twilio APIs.
 
 ---
 
-## ✨ Core Features
+# 🔗 Live Demo & Deployments
 
-This isn't just a chatbot — it's a **suite of powerful AI tools** tailored for the modern farmer.
+## 🌐 Frontend
+https://krishi-mitra-dev-ai.vercel.app/
 
-### 1. 🐛 Hybrid AI Pest & Disease Diagnosis
+## 🤗 Backend Deployment
+https://shivamr021-krishimitra-ai.hf.space/
 
-The **core innovation** of KrishiMitra.
-When a user sends a photo of a sick plant, the system performs a **two-step hybrid analysis**:
-
-* **Step 1 (Custom Model):**
-  A fast, **TensorFlow/Keras-based custom model** provides an instant diagnosis in milliseconds — handling common cases efficiently.
-* **Step 2 (AI Fallback):**
-  If model confidence is low, the image is automatically sent to **Google Gemini Vision AI** for advanced analysis.
-
-✅ *This hybrid architecture combines speed, accuracy, and cost-efficiency.*
+## 🎥 Demo Video
+https://youtube.com/shorts/ygmrwU6daT0?feature=share
 
 ---
 
-### 2. 📈 Real-Time Market Prices (Mandi Bhav)
+# ✨ Core Features
 
-Ask natural-language questions like:
+## 🐛 Crop Disease Diagnosis
 
-> “What is the price of wheat in Khargone?”
+Implements a confidence-threshold-based hybrid inference workflow:
 
-KrishiMitra fetches **up-to-the-minute mandi prices**, powered by **Gemini AI** and live market data interpretation.
+1. A local TensorFlow/EfficientNet model performs fast disease classification.
+2. Low-confidence predictions are routed to Gemini Vision for additional analysis.
 
----
-
-### 3. 🌤 Hyperlocal Weather Forecasts
-
-Get **real-time weather reports** for any city or village — including:
-
-* Temperature
-* Humidity
-* Practical farming advisories
-
-Helping farmers **plan daily agricultural activities** more effectively.
+This architecture improves robustness while reducing unnecessary API calls.
 
 ---
 
-### 4. 🌐 Multilingual Conversational AI
+## 📈 Real-Time Mandi Price Assistance
 
-KrishiMitra **understands and replies** in the user’s **native language** (e.g., Hindi, English).
-Its friendly *“Krishi Mitra”* persona ensures a tone that’s always **helpful, empathetic, and clear**.
+Users can request agricultural market pricing using natural-language WhatsApp queries.
 
----
-
-## ⚙️ Technology Stack & Architecture
-
-Built on a **robust, scalable, and modern AI stack** for real-world use.
-
-| Component                | Technology                            |
-| ------------------------ | ------------------------------------- |
-| **Backend Framework**    | FastAPI                               |
-| **Custom ML Model**      | TensorFlow & Keras                    |
-| **AI Language & Vision** | Google Gemini Pro & Gemini Pro Vision |
-| **Messaging Platform**   | Twilio WhatsApp API                   |
-| **Weather Data Source**  | OpenWeatherMap API                    |
-| **Deployment**           | Docker + Hugging Face Spaces          |
-| **Server Management**    | Gunicorn with Uvicorn workers         |
+### Example
+> "What is the soybean price in Indore?"
 
 ---
 
-## 🏗 Architectural Design
+## 🌤 Weather Intelligence
 
-KrishiMitra’s **AI Processor** acts as the central *“brain”*, intelligently routing user intent to specialized agents:
+Provides real-time weather insights including:
 
-* 🐛 **Pest Detection Agent**
-* 📈 **Market Price Agent**
-* 🌤 **Weather Agent**
+- temperature
+- humidity
+- environmental conditions
 
-The **hybrid pest diagnosis pipeline** ensures:
-
-* ⚡ Fast predictions for common cases (custom model)
-* 🧠 Deep analysis for complex cases (Gemini Vision fallback)
-* 💸 Cost-efficiency by using the paid API only when necessary
+to support day-to-day agricultural planning.
 
 ---
 
-## 🚀 Getting Started
+## 🌐 Multilingual AI Interaction
 
-### 1. Prerequisites
+Supports multilingual conversational responses including:
 
-Make sure you have:
+- Hindi
+- English
 
-* Python **3.11+**
-* A **Twilio WhatsApp Sandbox** account
-* API keys for:
-
-  * Google Gemini
-  * OpenWeatherMap
-  * Twilio
+using Gemini-powered conversational workflows.
 
 ---
 
-### 2. Installation
+# ⚙️ Technology Stack
+
+| Component | Technology |
+|---|---|
+| Backend API | FastAPI |
+| ML Framework | TensorFlow / Keras |
+| Vision Model | EfficientNetB0 |
+| LLM Integration | Google Gemini |
+| Messaging Platform | Twilio WhatsApp API |
+| Deployment | Hugging Face Spaces |
+| Frontend Hosting | Vercel |
+| Containerization | Docker |
+
+---
+
+# 🏗 System Architecture
+
+KrishiMitra routes user requests through specialized processing pipelines:
+
+- Disease Detection Pipeline
+- Market Price Handler
+- Weather Intelligence Handler
+- Conversational AI Handler
+
+The disease diagnosis workflow combines:
+
+- local CNN inference
+- confidence-threshold routing
+- Gemini Vision fallback analysis
+
+to improve handling of uncertain or low-quality agricultural images.
+
+Detailed system design notes are available in:
+
+```text
+docs/ARCHITECTURE.md
+```
+
+---
+
+# 📊 Model Evaluation
+
+The disease classification pipeline was trained using transfer learning on PlantDoc-style agricultural datasets.
+
+Evaluation artifacts and observations are available in:
+
+```text
+docs/EVALUATION.md
+docs/EVALUATION_RESULTS.md
+evaluation/eval.py
+```
+
+## Key Observations
+
+- controlled datasets generalized poorly to real-world farmer images
+- compressed WhatsApp images remain challenging
+- low-light agricultural images reduced prediction reliability
+- fallback routing improved uncertain prediction handling
+
+---
+
+# 🖼 Screenshots
+
+## Frontend Demo
+
+![Frontend Demo](assets/frontend_demo.png)
+
+---
+
+## WhatsApp Workflow
+
+![WhatsApp Demo](assets/whatsapp_demo.png)
+
+---
+
+## Hindi Interaction Demo
+
+![Hindi Demo](assets/whatsapp_hindi_demo.png)
+
+---
+
+# 🚀 Local Setup
+
+## Clone Repository
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd <your-repo-folder>
+git clone https://github.com/shivamr021/KrishiMitra-AI.git
 
-# Install dependencies
+cd KrishiMitra-AI
+```
+
+---
+
+## Install Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-### 3. Configuration
+## Configure Environment Variables
 
-Create a `.env` file in the project root and add your API keys:
+Create a `.env` file:
 
-```bash
-GEMINI_API_KEY="your_gemini_api_key_here"
-TWILIO_ACCOUNT_SID="your_twilio_account_sid_here"
-TWILIO_AUTH_TOKEN="your_twilio_auth_token_here"
-WEATHER_API_KEY="your_openweathermap_api_key_here"
+```env
+GEMINI_API_KEY=
+TWILIO_ACCOUNT_SID=
+TWILIO_AUTH_TOKEN=
+WEATHER_API_KEY=
 ```
 
 ---
 
-### 4. Run the Application Locally
-
-Start the FastAPI server with **Uvicorn**:
+## Run Backend Server
 
 ```bash
 uvicorn main:app --reload
@@ -150,29 +193,50 @@ uvicorn main:app --reload
 
 ---
 
-## 💬 Example Interaction (on WhatsApp)
+# 💬 Example Interaction
 
-**User:** “मक्का में कौनसी बीमारी है?”
+## User
+> मक्का में कौनसी बीमारी है?
 
-**Bot:** “लगता है आपकी पत्ती में फंगल संक्रमण है। कृपया कॉपर-आधारित फफूंदनाशी का उपयोग करें।”
-
-**User:** “What’s the price of soybean in Indore?”
-
-**Bot:** “Soybean prices in Indore — ₹4500–₹5200 per quintal.”
+## Bot
+> आपकी फसल में फंगल संक्रमण के संकेत दिखाई दे रहे हैं। कृपया कॉपर-आधारित फफूंदनाशी का उपयोग करें।
 
 ---
 
-## 👥 Team KrishiKrew
+# 📁 Repository Structure
 
-**KrishiMitra AI** is a collaborative project developed by a **team of four**, combining expertise in AI engineering, backend integration, frontend development, and research-driven presentation design.
+```text
+backend/
+frontend/
+docs/
+evaluation/
+assets/
+```
 
-### 🌱 Team Members & Contributions
+---
 
-| Name | Role & Responsibility | LinkedIn | GitHub |
-|------|----------------------|----------|--------|
-| **Shivam Rathod** | **Backend & AI Integration Engineer** | [LinkedIn](https://www.linkedin.com/in/shivamrathod021) | [GitHub](https://github.com/shivamr021) |
-| **Shatakshi Tiwari** | **AI/ML Engineer** | [LinkedIn](https://www.linkedin.com/in/shatakshitiwari017/) | [GitHub](https://github.com/Shatakshi0216) |
-| **Sahil Kukreja** | **Frontend Developer & System Design Support** | [LinkedIn](https://www.linkedin.com/in/sahil-kukreja-943993289/) | [GitHub](https://github.com/Sahilkukreja30) |
-| **Nitika Jain** | **Backend & Research** | [LinkedIn](https://www.linkedin.com/in/nitika-jain-b8690b353/) | [GitHub](https://github.com/nitikajain25) |
+# 👥 Team
 
-> 💡 *This project is submitted to the **OpenAI × NxtWave Buildathon** under team name **KrishiKrew**, featuring collaborative contributions across research, design, and AI integration.*
+## Shivam Rathod
+Backend Development, AI Integration, TensorFlow Model Training, Twilio Workflow Automation
+
+## Sahil Kukreja
+Frontend Development
+
+## Shatakshi Tiwari
+Presentation & Research Support
+
+## Nitika Jain
+Documentation & Research Support
+
+---
+
+# 📌 Project Context
+
+This project was initially developed during the OpenAI × NxtWave Buildathon and later refined into an applied AI systems engineering portfolio project.
+
+---
+
+# 📄 License
+
+MIT License
